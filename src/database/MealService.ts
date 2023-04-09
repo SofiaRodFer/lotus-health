@@ -56,11 +56,20 @@ export default class MealService {
 
   FindById(id: number) {
     return new Promise((resolve, reject) => db.transaction(tx => {
-      tx.executeSql(`SELECT meal_id, food_id, type AS meal_type, avg_health_score, date_meal, name AS food_name, health_score FROM FoodInMeal INNER JOIN Meals ON Meals.id = FoodInMeal.meal_id INNER JOIN Foods ON Foods.id = FoodInMeal.food_id WHERE meal_id = ${id};`, [id], (_, { rows }) => {
-        resolve(rows)
-      }), (sqlError) => {
-        console.log(sqlError);
-      }
+      tx.executeSql(
+        `SELECT 
+          FoodInMeal.meal_id, FoodInMeal.food_id, Meals.type AS meal_type, Meals.avg_health_score, Meals.date_meal, Foods.name AS food_name, Foods.health_score 
+          FROM FoodInMeal 
+          INNER JOIN Meals 
+            ON Meals.id = FoodInMeal.meal_id 
+          INNER JOIN Foods 
+            ON Foods.id = FoodInMeal.food_id 
+          WHERE FoodInMeal.meal_id = ?;`,
+        [id], (_, { rows }) => {
+          resolve(rows)
+        }), (sqlError) => {
+          console.log(sqlError);
+        }
     }, (txError) => {
       console.log(txError);
 
@@ -69,11 +78,19 @@ export default class MealService {
 
   List() {
     return new Promise((resolve, reject) => db.transaction(tx => {
-      tx.executeSql(`SELECT meal_id, food_id, type AS meal_type, avg_health_score, date_meal, name AS food_name, health_score FROM FoodInMeal INNER JOIN Meals ON Meals.id = FoodInMeal.meal_id INNER JOIN Foods ON Foods.id = FoodInMeal.food_id;`, [], (_, { rows }) => {
-        resolve(rows)
-      }), (sqlError) => {
-        console.log(sqlError);
-      }
+      tx.executeSql(
+        `SELECT 
+            meal_id, food_id, type AS meal_type, avg_health_score, date_meal, name AS food_name, health_score 
+          FROM FoodInMeal 
+          INNER JOIN Meals 
+            ON Meals.id = FoodInMeal.meal_id 
+          INNER JOIN Foods 
+            ON Foods.id = FoodInMeal.food_id;`,
+        [], (_, { rows }) => {
+          resolve(rows)
+        }), (sqlError) => {
+          console.log(sqlError);
+        }
     }, (txError) => {
       console.log(txError);
     }))

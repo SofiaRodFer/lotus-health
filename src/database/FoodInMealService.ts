@@ -6,7 +6,7 @@ import { DatabaseConnection } from './DatabaseInit';
 const table = "FoodInMeal"
 const db = DatabaseConnection.getConnection()
 
-export default class FoodService {
+export default class FoodInMealService {
   Insert(param: FoodInMealModel) {
     return new Promise((resolve, reject) => db.transaction(
       tx => {
